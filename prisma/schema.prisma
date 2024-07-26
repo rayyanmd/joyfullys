@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int          @id @default(autoincrement())
+  name            String
+  password        String
+  admin           Boolean
+  assignmentsDone Assignment[]
+  comments        Comment[]
+  replies         Reply[]
+}
+
+enum Day {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
+model Subject {
+  id          Int          @id @default(autoincrement())
+  name        String
+  teacher     String
+  timetables  Timetable[]
+  assignments Assignment[]
+  resources   Resource[]
+}
+
+model Timetable {
+  id        Int      @id @default(autoincrement())
+  break     Boolean  @default(false)
+  subject   Subject? @relation(fields: [subjectId], references: [id])
+  subjectId Int?
+  day       Day
+  time      Int[]
+}
+
+model Assignment {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  dueDate     DateTime
+  subject     Subject? @relation(fields: [subjectId], references: [id])
+  subjectId   Int?
+  usersDone   User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum ResourceType {
+  BOOK
+  NOTE
+}
+
+model Resource {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String
+  type        ResourceType
+  subject     Subject?     @relation(fields: [subjectId], references: [id])
+  subjectId   Int?
+  comments    Comment[]
+  content     Bytes
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  resourceId Int
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  content    String
+  replies    Reply[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Reply {
+  id        Int      @id @default(autoincrement())
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId Int?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
