@@ -35,6 +35,7 @@ model Subject {
   id          Int          @id @default(autoincrement())
   name        String
   teacher     String
+  book        String?
   timetables  Timetable[]
   assignments Assignment[]
   resources   Resource[]
@@ -61,22 +62,16 @@ model Assignment {
   updatedAt   DateTime @updatedAt
 }
 
-enum ResourceType {
-  BOOK
-  NOTE
-}
-
 model Resource {
-  id          Int          @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   description String
-  type        ResourceType
-  subject     Subject?     @relation(fields: [subjectId], references: [id])
+  subject     Subject?  @relation(fields: [subjectId], references: [id])
   subjectId   Int?
   comments    Comment[]
   content     Bytes
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Comment {
