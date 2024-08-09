@@ -1,14 +1,29 @@
 "use client";
 import { dueDate } from "@/lib/utils";
 import { Assignment as AssignmentType, Subject } from "@prisma/client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export default function Assignment({
   assignment,
+  setAssignmentsDone,
+  done,
 }: {
   assignment: { subject: Subject } & AssignmentType;
+  setAssignmentsDone: Dispatch<SetStateAction<number[]>>;
+  done: boolean;
 }) {
   const [open, setOpen] = useState(false);
+
+  const markDone = () => {
+    const storage = localStorage.getItem("assignments-done");
+    const storageArray: number[] = storage ? JSON.parse(storage) : [];
+
+    if (done) storageArray.splice(storageArray.indexOf(assignment.id), 1);
+    else storageArray.push(assignment.id);
+
+    localStorage.setItem("assignments-done", JSON.stringify(storageArray));
+    setAssignmentsDone(storageArray);
+  };
 
   return (
     <>
@@ -16,7 +31,9 @@ export default function Assignment({
         onClick={() => {
           setOpen(true);
         }}
-        className="bg-green-300 hover:opacity-75 rounded-lg p-2 text-left w-full block transition-all"
+        className={`${
+          done ? "bg-green-300" : "bg-slate-500 text-white"
+        } hover:opacity-75 rounded-lg p-2 text-left w-full block transition-all`}
       >
         <p className="font-bold text-xl">{assignment.title}</p>
         <p>{assignment.subject.name}</p>
@@ -44,8 +61,11 @@ export default function Assignment({
             </div>
             <div className="w-full flex flex-col justify-end">
               <p className="mb-1">{dueDate(assignment.dueDate)}</p>
-              <button className="bg-slate-600 text-white px-4 py-2 mb-2 rounded-md hover:opacity-75">
-                Tandai Sudah
+              <button
+                className="bg-slate-500 text-white px-4 py-2 mb-2 rounded-md hover:opacity-75"
+                onClick={markDone}
+              >
+                {done ? "Tandai Belum Mengerjakan" : "Tandai Sudah"}
               </button>
             </div>
           </div>

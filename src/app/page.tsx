@@ -8,7 +8,6 @@ import {
   Timetable as TimetableType,
   Assignment as AssignmentType,
 } from "@prisma/client";
-import Assignment from "@/components/assignment";
 import AssignmentSection from "@/components/assignmentsection";
 
 export default async function Home() {
