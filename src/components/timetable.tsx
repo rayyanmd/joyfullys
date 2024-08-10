@@ -26,10 +26,10 @@ function Button({
 
 export default function Timetable({
   data,
-  admin,
+  onDelete,
 }: {
   data: ({ subject: Subject } & TimetableType)[];
-  admin?: any;
+  onDelete?: any;
 }) {
   const [selected, setSelected] = useState<string>(Day.TUESDAY);
 
@@ -59,11 +59,11 @@ export default function Timetable({
               <div className="w-full">
                 {timetable.break ? "Istirahat" : timetable.subject?.name}
               </div>
-              {admin && (
+              {onDelete && (
                 <button
                   className="bg-red-500 text-white rounded-md px-2 hover:opacity-75"
                   onClick={async () => {
-                    await admin(timetable.id);
+                    await onDelete(timetable.id);
                     alert("Berhasil terhapus");
                     location.reload();
                   }}

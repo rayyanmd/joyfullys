@@ -3,7 +3,7 @@ import { Day, Subject } from "@prisma/client";
 import { useState } from "react";
 import { useFormState } from "react-dom";
 
-export default function AddTimetable({
+export default function AddBook({
   action,
   subjects,
 }: {
@@ -25,7 +25,7 @@ export default function AddTimetable({
         }}
         className="bg-teal-400 hover:opacity-75 rounded-lg text-center p-2 w-full block transition-all"
       >
-        Tambah Jadwal
+        Tambah Buku
       </button>
       <div
         className="fixed left-0 top-0 w-full h-full p-12"
@@ -46,15 +46,6 @@ export default function AddTimetable({
           }}
         >
           <form action={formAction}>
-            <label htmlFor="day">Hari:</label>
-            <select id="day" className="px-4 py-2" name="day">
-              {Object.values(Day).map((day) => (
-                <option key={day} value={day}>
-                  {day}
-                </option>
-              ))}
-            </select>
-            <br />
             <label htmlFor="subject">Mata Pelajaran:</label>
             <select id="subject" className="px-4 py-2" name="subject">
               {subjects.map((subject) => (
@@ -62,19 +53,15 @@ export default function AddTimetable({
                   {subject.name}
                 </option>
               ))}
-              <option value="break">Istirahat</option>
             </select>
             <br />
-            <label htmlFor="time">Waktu:</label>
+            <label htmlFor="book">Url Pdf</label>
             <input
-              className="ml-2"
-              type="time"
-              id="time"
-              name="from"
-              required
+              type="text"
+              id="book"
+              name="book"
+              className="ml-2 border-2"
             />
-            sampai
-            <input className="ml-2" type="time" name="to" required />
             <br />
             <button
               type="submit"

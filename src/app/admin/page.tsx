@@ -11,6 +11,7 @@ import {
 import AssignmentSection from "@/components/assignmentsection";
 import AddTimetable from "@/components/add-timetable";
 import { timeToSeconds } from "@/lib/utils";
+import AddBook from "@/components/add-book";
 
 export default async function Admin() {
   const timetable = (
@@ -39,6 +40,7 @@ export default async function Admin() {
     },
   })) as ({ subject: Subject } & AssignmentType)[];
 
+  // Timetable
   async function addTimetable(prevState: boolean, formData: FormData) {
     "use server";
 
@@ -74,6 +76,37 @@ export default async function Admin() {
     return true;
   }
 
+  // Book
+  async function addBook(prevState: any, formData: FormData) {
+    "use server";
+
+    await prisma.subject.update({
+      where: {
+        id: Number(formData.get("subject")),
+      },
+      data: {
+        book: formData.get("book") as string,
+      },
+    });
+
+    return true;
+  }
+
+  async function deleteBook(id: number) {
+    "use server";
+
+    await prisma.subject.update({
+      where: {
+        id,
+      },
+      data: {
+        book: null,
+      },
+    });
+
+    return true;
+  }
+
   return (
     <div className="container w-[95%] mx-auto mt-6">
       <div className="flex justify-center">
@@ -82,12 +115,19 @@ export default async function Admin() {
       <div className="lg:flex mt-6 lg:space-x-2 space-y-4 lg:space-y-0">
         <Section title="Jadwal Pelajaran">
           <AddTimetable action={addTimetable} subjects={subjects} />
-          <Timetable data={timetable} admin={deleteTimetable} />
+          <Timetable data={timetable} onDelete={deleteTimetable} />
         </Section>
         <Section title="Buku">
+          <AddBook action={addBook} subjects={subjects} />
           {subjects.map((subject) => {
             if (subject.book)
-              return <Book key={subject.id} subject={subject} />;
+              return (
+                <Book
+                  key={subject.id}
+                  subject={subject}
+                  onDelete={deleteBook}
+                />
+              );
           })}
         </Section>
         <Section title="Tugas">
