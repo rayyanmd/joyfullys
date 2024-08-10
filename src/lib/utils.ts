@@ -1,9 +1,17 @@
 export function secondsToTime(seconds: number): string {
-  return (
-    Math.floor(seconds / 3600) +
-    ":" +
-    Math.floor((seconds / 3600 - Math.floor(seconds / 3600)) * 60)
-  );
+  const hours = Math.floor(seconds / 3600)
+    .toString()
+    .padStart(2, "0");
+  const minutes = Math.floor((seconds % 3600) / 60)
+    .toString()
+    .padStart(2, "0");
+
+  return `${hours}:${minutes}`;
+}
+
+export function timeToSeconds(time: string): number {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 3600 + minutes * 60;
 }
 
 export function dueDate(dueDate: Date): string {

@@ -53,6 +53,9 @@ export default function Assignment({
           style={{
             opacity: open ? 1 : 0,
           }}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
           <div className="flex">
             <div className="w-full">
