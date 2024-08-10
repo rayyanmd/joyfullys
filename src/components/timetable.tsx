@@ -1,5 +1,5 @@
 "use client";
-import { secondsToTime } from "@/lib/utils";
+import { currentDay, currentTime, secondsToTime } from "@/lib/utils";
 import { Day, Subject, Timetable as TimetableType } from "@prisma/client";
 import { ReactNode, useState } from "react";
 
@@ -31,7 +31,8 @@ export default function Timetable({
   data: ({ subject: Subject } & TimetableType)[];
   onDelete?: any;
 }) {
-  const [selected, setSelected] = useState<string>(Day.TUESDAY);
+  const { day, weekend } = currentDay();
+  const [selected, setSelected] = useState<string>(day);
 
   return (
     <>
@@ -51,7 +52,17 @@ export default function Timetable({
       {data.map((timetable) => {
         if (timetable.day == selected)
           return (
-            <div className="flex space-x-2" key={timetable.id}>
+            <div
+              className={`flex space-x-2 ${
+                currentTime() >= timetable.time[0] &&
+                currentTime() <= timetable.time[1] &&
+                selected == day &&
+                !weekend
+                  ? "bg-slate-200"
+                  : ""
+              }`}
+              key={timetable.id}
+            >
               <div className="w-1/2 text-right">
                 {secondsToTime(timetable.time[0])} -{" "}
                 {secondsToTime(timetable.time[1])}

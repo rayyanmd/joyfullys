@@ -1,3 +1,5 @@
+import { Day } from "@prisma/client";
+
 export function secondsToTime(seconds: number): string {
   const hours = Math.floor(seconds / 3600)
     .toString()
@@ -14,6 +16,11 @@ export function timeToSeconds(time: string): number {
   return hours * 3600 + minutes * 60;
 }
 
+export function currentTime(): number {
+  const now = new Date();
+  return timeToSeconds(`${now.getHours()}:${now.getMinutes()}`);
+}
+
 export function dueDate(dueDate: Date): string {
   const seconds = (dueDate.getTime() - Date.now()) / 1000;
 
@@ -23,4 +30,15 @@ export function dueDate(dueDate: Date): string {
     return Math.round(seconds / 3600) + " Jam";
   }
   return Math.round(seconds / 86400) + " Hari";
+}
+
+export function currentDay(): { day: Day; weekend: boolean } {
+  const today = new Date();
+  const day = today.getDay();
+
+  if (day === 6 || day === 0) {
+    return { day: Day.MONDAY, weekend: true };
+  }
+
+  return { day: Object.values(Day)[day - 1] as Day, weekend: false };
 }
