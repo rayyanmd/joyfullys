@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 
 export default function AssignmentSection({
   assignments,
+  onDelete,
 }: {
   assignments: ({ subject: Subject } & AssignmentType)[];
+  onDelete?: any;
 }) {
   const [assignmentsDone, setAssignmentsDone] = useState<number[]>([]);
 
@@ -25,6 +27,7 @@ export default function AssignmentSection({
               assignment={assignment}
               setAssignmentsDone={setAssignmentsDone}
               done={false}
+              onDelete={onDelete}
             />
           );
         }

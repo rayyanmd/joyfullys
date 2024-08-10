@@ -12,6 +12,7 @@ import AssignmentSection from "@/components/assignmentsection";
 import AddTimetable from "@/components/add-timetable";
 import { timeToSeconds } from "@/lib/utils";
 import AddBook from "@/components/add-book";
+import AddAssignment from "@/components/add-assignment";
 
 export default async function Admin() {
   const timetable = (
@@ -107,6 +108,39 @@ export default async function Admin() {
     return true;
   }
 
+  // Assignment
+  async function addAssignment(prevState: boolean, formData: FormData) {
+    "use server";
+
+    const data = {
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      dueDate: new Date(formData.get("date") as string),
+      subjectId:
+        formData.get("subject") != "break"
+          ? Number(formData.get("subject"))
+          : null,
+    };
+
+    await prisma.assignment.create({
+      data,
+    });
+
+    return true;
+  }
+
+  async function deleteAssignment(id: number) {
+    "use server";
+
+    await prisma.assignment.delete({
+      where: {
+        id,
+      },
+    });
+
+    return true;
+  }
+
   return (
     <div className="container w-[95%] mx-auto mt-6">
       <div className="flex justify-center">
@@ -131,7 +165,11 @@ export default async function Admin() {
           })}
         </Section>
         <Section title="Tugas">
-          <AssignmentSection assignments={assignments} />
+          <AddAssignment action={addAssignment} subjects={subjects} />
+          <AssignmentSection
+            assignments={assignments}
+            onDelete={deleteAssignment}
+          />
         </Section>
       </div>
     </div>

@@ -7,10 +7,12 @@ export default function Assignment({
   assignment,
   setAssignmentsDone,
   done,
+  onDelete,
 }: {
   assignment: { subject: Subject } & AssignmentType;
   setAssignmentsDone: Dispatch<SetStateAction<number[]>>;
   done: boolean;
+  onDelete?: any;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -27,17 +29,31 @@ export default function Assignment({
 
   return (
     <>
-      <button
-        onClick={() => {
-          setOpen(true);
-        }}
-        className={`${
-          done ? "bg-green-300" : "bg-slate-500 text-white"
-        } hover:opacity-75 rounded-lg p-2 text-left w-full block transition-all`}
-      >
-        <p className="font-bold text-xl">{assignment.title}</p>
-        <p>{assignment.subject.name}</p>
-      </button>
+      <div className="flex">
+        <button
+          onClick={() => {
+            setOpen(true);
+          }}
+          className={`${
+            done ? "bg-green-300" : "bg-slate-500 text-white"
+          } hover:opacity-75 rounded-lg p-2 text-left w-full block transition-all`}
+        >
+          <p className="font-bold text-xl">{assignment.title}</p>
+          <p>{assignment.subject.name}</p>
+        </button>
+        {onDelete && (
+          <button
+            className="bg-red-500 text-white rounded-md px-2 hover:opacity-75"
+            onClick={async () => {
+              await onDelete(assignment.id);
+              alert("Berhasil terhapus");
+              location.reload();
+            }}
+          >
+            Hapus
+          </button>
+        )}
+      </div>
 
       <div
         className="fixed left-0 top-0 w-full h-full p-12"
@@ -73,7 +89,7 @@ export default function Assignment({
             </div>
           </div>
           <hr className="mb-2" />
-          <p>{assignment.description}</p>
+          <p className="whitespace-pre-line">{assignment.description}</p>
         </div>
       </div>
     </>
