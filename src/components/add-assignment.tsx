@@ -3,7 +3,7 @@ import { Day, Subject } from "@prisma/client";
 import { useState } from "react";
 import { useFormState } from "react-dom";
 
-export default function addAssignment({
+export default function AddAssignment({
   action,
   subjects,
 }: {
