@@ -35,14 +35,18 @@ export default function AssignmentSection({
       {assignmentsDone.length > 0 && (
         <p className="p-2 font-bold">Sudah Dikerjakan</p>
       )}
-      {assignmentsDone.map((assignmentId) => (
-        <Assignment
-          key={assignmentId}
-          assignment={assignments.find((a) => a.id == assignmentId)!!}
-          setAssignmentsDone={setAssignmentsDone}
-          done={true}
-        />
-      ))}
+      {assignmentsDone.map((assignmentId) => {
+        const assignment = assignments.find((a) => a.id == assignmentId);
+        if (assignment)
+          return (
+            <Assignment
+              key={assignmentId}
+              assignment={assignment}
+              setAssignmentsDone={setAssignmentsDone}
+              done={true}
+            />
+          );
+      })}
     </>
   );
 }
