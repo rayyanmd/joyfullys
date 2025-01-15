@@ -112,10 +112,13 @@ export default async function Admin() {
   async function addAssignment(prevState: boolean, formData: FormData) {
     "use server";
 
+    const dueDateUTC7 = new Date(formData.get('date') as string);
+    const dueDateUTC = new Date(dueDateUTC7.getTime() - (7 * 60 * 60 * 1000)); 
+
     const data = {
       title: formData.get("title") as string,
       description: formData.get("description") as string,
-      dueDate: new Date(formData.get("date") as string),
+      dueDate: dueDateUTC.toISOString(),
       subjectId:
         formData.get("subject") != "break"
           ? Number(formData.get("subject"))

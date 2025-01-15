@@ -17,8 +17,12 @@ export function timeToSeconds(time: string): number {
 }
 
 export function currentTime(): number {
-  const now = new Date();
-  return timeToSeconds(`${now.getHours()}:${now.getMinutes()}`);
+  const now = new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Bangkok",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return timeToSeconds(now.replace(" AM", "").replace(" PM", ""));
 }
 
 export function dueDate(dueDate: Date): string {
@@ -33,7 +37,9 @@ export function dueDate(dueDate: Date): string {
 }
 
 export function currentDay(): { day: Day; weekend: boolean } {
-  const today = new Date();
+  const today = new Date(new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Bangkok",
+  }));
   const day = today.getDay();
 
   if (day === 6 || day === 0) {
