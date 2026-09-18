@@ -1,18 +1,25 @@
-import { NextRequest, NextResponse as res } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
-  if (!req.nextUrl.pathname.startsWith("/admin")) return;
+  if (!req.nextUrl.pathname.startsWith("/admin")) {
+    return NextResponse.next();
+  }
 
-  if (req.headers.get("Authorization") == `Basic ${process.env.ADMIN_SECRET}`)
-    return res.next();
+  const authHeader = req.headers.get("authorization");
+  const expected = `Basic ${process.env.ADMIN_SECRET}`;
 
-  return res.json(
-    { success: false },
-    {
-      status: 401,
-      headers: {
-        "WWW-Authenticate": "Basic",
-      },
-    }
-  );
+  if (authHeader === expected) {
+    return NextResponse.next();
+  }
+
+  return new NextResponse("Authentication required", {
+    status: 401,
+    headers: {
+      "WWW-Authenticate": 'Basic realm="Admin"',
+    },
+  });
 }
+
+export const config = {
+  matcher: "/admin/:path*",
+};
