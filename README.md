@@ -7,6 +7,7 @@ Demo: https://web-kelas.rayyan.web.id
 
 ## Teknologi yang Dibuat
 
+- **Bahasa**: TypeScript
 - **Framework**: Next.js
 - **Styling**: TailwindCSS
 - **Database**: PostgreSQL
@@ -24,3 +25,35 @@ Demo: https://web-kelas.rayyan.web.id
 - **Kelola Tugas**: Buat tugas baru dan atur batas waktu pengumpulan (*deadline*).
 - **Kelola Buku & Modul**: Memasukkan link file buku pelajaran sesuai mata pelajaran masing-masing.
 - **Autentikasi**: Akses khusus admin untuk menjaga keamanan data kelas.
+
+## Alur Program
+```mermaid
+graph LR
+    subgraph Pengguna
+        S[Siswa / Pengunjung]
+        A[Admin / Pengurus Kelas]
+    end
+
+    subgraph "Sistem Informasi Kelas"
+        UC1((Lihat Jadwal Pelajaran))
+        UC2((Lihat Daftar Tugas))
+        UC3((Unduh / Baca Buku))
+        UC4((Login Admin))
+        UC5((Kelola Jadwal))
+        UC6((Kelola Tugas & Deadline))
+        UC7((Kelola File Buku))
+    end
+
+    S --> UC1
+    S --> UC2
+    S --> UC3
+
+    A --> UC4
+    A --> UC5
+    A --> UC6
+    A --> UC7
+
+    UC5 -.->|Requires| UC4
+    UC6 -.->|Requires| UC4
+    UC7 -.->|Requires| UC4
+```
